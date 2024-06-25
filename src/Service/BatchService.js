@@ -23,7 +23,7 @@ const createBatch = async (req, res) => {
             return res.status(409).json({ message: "Batch already exists with this email." });
         }
 
-        const uploadDirectory = path.join(__dirname, 'uploads');
+        const uploadDirectory = path.join(__dirname, 'images');
         if (!fs.existsSync(uploadDirectory)) {
             fs.mkdirSync(uploadDirectory);
         }

@@ -1,22 +1,48 @@
 const multer = require('multer');
 const path = require('path');
-
+const fs = require('fs');
+const Batch = require("./Model/Batch");
 
 const storage = multer.diskStorage({
-    destination: (req, file, cb) => {
-        cb(null, 'images/');
+    destination: async (req, file, cb) => {
+        const baseDir = 'Images';
+        const garbageDir = path.join(baseDir, 'Garbed');
+        let data;
+        try {
+            data = JSON.parse(req.body.data);
+        } catch (error) {
+            return cb(new Error('Invalid JSON in data field'), false);
+        }
+        const email = data.email;
+        const folder = email.split('@')[0];
+        const dir = path.join(baseDir, folder);
+
+        try {
+            if (!fs.existsSync(baseDir)) {
+                fs.mkdirSync(baseDir, { recursive: true });
+            }
+            const batch = await Batch.findOne({ where: { email: email } });
+            if (batch) {
+                if (!fs.existsSync(garbageDir)) {
+                    fs.mkdirSync(garbageDir, { recursive: true });
+                }
+                return cb(null, garbageDir);
+            }
+            if (!fs.existsSync(dir)) {
+                fs.mkdirSync(dir, { recursive: true });
+            }
+            cb(null, dir);
+        } catch (error) {
+            cb(new Error('Failed to check or create directory'), false);
+        }
     },
     filename: (req, file, cb) => {
         const extension = path.extname(file.originalname);
-        const batch = '_28';
-        const semester = '_4-1';
-        const course = '_dip';
-        const title = '_noteTrisha';
-        const newName = `${batch}${semester}${course}${title}${extension}`;
-        cb(null,newName);
+        const newName = `${Date.now()}${extension}`;
+        cb(null, newName);
     }
 });
 
-const storageConfig = multer({ storage });
+const upload = multer({ storage });
 
-module.exports = storageConfig;
+module.exports = upload;

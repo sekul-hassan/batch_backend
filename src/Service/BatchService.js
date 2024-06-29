@@ -1,6 +1,4 @@
 const Batch = require("../Model/Batch");
-const fs = require('fs');
-const path = require('path');
 
 const getAllBatch = async (req, res) => {
     try {
@@ -13,25 +11,27 @@ const getAllBatch = async (req, res) => {
 }
 
 const createBatch = async (req, res) => {
-    // console.log(req.files);
-
     if (!req.body.data) {
         return res.status(400).json({ message: 'No data provided' });
     }
-
-    const { name, email, password, session } = JSON.parse(req.body.data);
-
+    let data = JSON.parse(req.body.data);
+    const { name, email, password, session } = data;
+    if(!name || !email || !password || !session || !req.files)
+        return res.status(400).json({ message: 'Invalid data provided' });
+    const profilePic = req.files.profilePic[0].path;
+    const coverPic = req.files.coverPic[0].path;
     try {
         const existingBatch = await Batch.findOne({ where: { email: email } });
         if (existingBatch) {
             return res.status(409).json({ message: "Batch already exists with this email." });
         }
-
         const batch = await Batch.create({
             name,
             email,
             password,
             session,
+            profilePic,
+            coverPic
         });
 
         return res.status(201).json(batch);
@@ -40,7 +40,6 @@ const createBatch = async (req, res) => {
         return res.status(500).json({ error: "Internal Server Error" });
     }
 };
-
 
 
 

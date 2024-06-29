@@ -20,3 +20,4 @@ app.listen(port, async () => {
         console.error("Failed to synchronize database:", err);
     }
 });
+

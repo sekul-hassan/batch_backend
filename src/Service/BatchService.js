@@ -41,6 +41,21 @@ const createBatch = async (req, res) => {
     }
 };
 
+const login = async (req, res) => {
+    const { email, password } = req.body;
+    if (!email || !password) {
+        return res.status(400).json({ message: 'Email and password is required' });
+    }
+    const batch = await Batch.findOne({where: {
+            email: email,
+            password: password,
+        }})
+    if(batch){
+        return res.status(200).json({batch});
+    }
+    return res.status(404).json({ error: "Email or password is incorrect." });
+}
 
 
-module.exports = { createBatch, getAllBatch };
+
+module.exports = { createBatch, getAllBatch,login };

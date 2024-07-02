@@ -56,6 +56,4 @@ const login = async (req, res) => {
     return res.status(404).json({ error: "Email or password is incorrect." });
 }
 
-
-
 module.exports = { createBatch, getAllBatch,login };

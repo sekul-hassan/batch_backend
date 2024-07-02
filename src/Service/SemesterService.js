@@ -7,9 +7,9 @@ const addSemester = async (req, res) => {
         if (!data) {
             return res.status(400).json({ message: 'No data provided' });
         }
-
-        const { batchId, semester, mcrName, fcrName } = data;
-
+        const batchId = req.body.batchId;
+        const {semester, mcrName, fcrName } = data;
+        console.log("batchId", batchId);
         const batch = await Batch.findByPk(batchId);
         if (!batch) {
             return res.status(404).json({ message: 'Batch not found' });
@@ -51,4 +51,13 @@ const addSemester = async (req, res) => {
     }
 };
 
-module.exports = { addSemester };
+const getSemesters = async (req, res) => {
+    const batchId = req.headers['batchid'];
+    if(batchId){
+        const semesters = await Semester.findAll({where: {batchId:batchId}});
+        return res.status(200).json(semesters);
+    }
+    return res.status(500).json({ error: "Internal Server Error" });
+}
+
+module.exports = { addSemester,getSemesters };

@@ -41,7 +41,8 @@ const storage = multer.diskStorage({
             }
             else{
                 // save image for cr,others files
-                batch = await Batch.findByPk(data.batchId);
+                const batchId = req.body.batchId;
+                batch = await Batch.findByPk(batchId);
                 if(batch){
                     email = batch.email;
                     const folder = email.split('@')[0];

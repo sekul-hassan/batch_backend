@@ -54,10 +54,21 @@ const addSemester = async (req, res) => {
 const getSemesters = async (req, res) => {
     const batchId = req.headers['batchid'];
     if(batchId){
-        const semesters = await Semester.findAll({where: {batchId:batchId}});
-        return res.status(200).json(semesters);
+        const semesters = await Semester.findAll({where: {batchId: batchId}});
+        const updatedSemesters = semesters.map(semester => ({
+            ...semester.dataValues,
+            mcrPhoto: `${req.protocol}://${req.get('host')}/static/${encodeFilePath(semester.mcrPhoto)}`,
+            fcrPhoto: `${req.protocol}://${req.get('host')}/static/${encodeFilePath(semester.fcrPhoto)}`
+        }));
+
+        return res.status(200).json(updatedSemesters);
     }
     return res.status(500).json({ error: "Internal Server Error" });
 }
+const encodeFilePath = (filePath) => {
+    return filePath.split('\\').map(encodeURIComponent).join('/');
+}
+
+
 
 module.exports = { addSemester,getSemesters };

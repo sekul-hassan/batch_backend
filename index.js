@@ -4,10 +4,12 @@ const cors = require('cors');
 const modelSynchronization = require('./src/DBConfig/ModelSynchronization');
 const { batchRouter } = require("./src/Route/BatchRoute");
 const {semesterRouter} = require("./src/Route/SemesterRoute");
+const path = require("node:path");
 
 const app = express();
 const port = 5000;
 
+app.use('/static',express.static(path.join(__dirname, '/')));
 app.use(bodyParser.json());
 app.use(cors());
 

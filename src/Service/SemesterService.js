@@ -9,7 +9,6 @@ const addSemester = async (req, res) => {
         }
         const batchId = req.body.batchId;
         const {semester, mcrName, fcrName } = data;
-        console.log("batchId", batchId);
         const batch = await Batch.findByPk(batchId);
         if (!batch) {
             return res.status(404).json({ message: 'Batch not found' });

@@ -5,6 +5,8 @@ const modelSynchronization = require('./src/DBConfig/ModelSynchronization');
 const { batchRouter } = require("./src/Route/BatchRoute");
 const {semesterRouter} = require("./src/Route/SemesterRoute");
 const path = require("node:path");
+const {courseRouter} = require("./src/Route/CourseRoute");
+const {courseDetailsRouter} = require("./src/Route/CourseDetailsRoute");
 
 const app = express();
 const port = 5000;
@@ -15,6 +17,8 @@ app.use(cors());
 
 app.use("/api/batch", batchRouter);
 app.use("/api/semester", semesterRouter);
+app.use("/api/course", courseRouter);
+app.use("/api/courseDetails", courseDetailsRouter);
 
 app.listen(port, async () => {
     console.log(`Server is running on http://localhost:${port}`);

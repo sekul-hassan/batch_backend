@@ -70,4 +70,4 @@ const encodeFilePath = (filePath) => {
 
 
 
-module.exports = { addSemester,getSemesters };
+module.exports = { addSemester,getSemesters ,encodeFilePath};

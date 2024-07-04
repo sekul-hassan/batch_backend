@@ -3,6 +3,7 @@ const path = require('path');
 const fs = require('fs');
 const Batch = require("./Model/Batch");
 const Semester = require("./Model/Semester");
+const CourseDetails = require("./Model/CouseDetails");
 
 const storage = multer.diskStorage({
     destination: async (req, file, cb) => {
@@ -35,6 +36,42 @@ const storage = multer.diskStorage({
                     fs.mkdirSync(dir, { recursive: true });
                 }
                 cb(null, dir);
+            }
+
+            else if(file.fieldname==='image'){
+                const data = JSON.parse(req.body.data);
+                const description = data.description;
+                const courseId = req.body.title;
+                const batchId = req.body.batchId;
+                const semesterId = req.body.semesterId;
+                if(!description || !courseId || !batchId || !semesterId){
+                    return cb(null,garbageDir);
+                }
+                const batch = await Batch.findByPk(batchId);
+                const semester = await Semester.findByPk(semesterId);
+                if(batch && semester){
+                    console.log("From batch and semester")
+                    const email = batch.email;
+                    const folder = email.split('@')[0];
+                    let dir = path.join(baseDir, folder);
+
+                    const existingCourse = await CourseDetails.findOne({where:{
+                            batchId:batchId,
+                            semesterId: semesterId,
+                            courseId:courseId,
+                            description:description,
+                        }})
+                    if(existingCourse){
+                        return cb(null,garbageDir);
+                    }
+
+                    dir = path.join(dir, semester.semester);
+                    dir = path.join(dir,courseId);
+                    if (!fs.existsSync(dir)) {
+                        fs.mkdirSync(dir, { recursive: true });
+                    }
+                    return cb(null, dir);
+                }
             }
             else{
                 const batchId = req.body.batchId;
@@ -69,7 +106,12 @@ const storage = multer.diskStorage({
     filename: (req, file, cb) => {
         const fileName = file.fieldname;
         const extension = path.extname(file.originalname);
-        const newName = `${fileName}${extension}`;
+        let newName = `${fileName}${extension}`;
+        if(file.fieldname==='image'){
+            const data = JSON.parse(req.body.data);
+            const description = data.description;
+            newName = `${description}${extension}`;
+        }
         cb(null, newName);
     }
 });

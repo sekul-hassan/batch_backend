@@ -1,12 +1,28 @@
-const { DataTypes } = require("sequelize");
+const { Model, DataTypes } = require("sequelize");
 const sequelize = require('../DBConfig/Config');
 
-const Member = sequelize.define('member', {
-    id: { type: DataTypes.INTEGER, primaryKey: true, autoIncrement: true },
-    phone: { type: DataTypes.STRING },
-    email: { type: DataTypes.STRING },
-    district: { type: DataTypes.STRING },
-    profile: { type: DataTypes.STRING }
-}, { timestamps: false });
+class Member extends Model {}
+
+Member.init({
+    id: {
+        type: DataTypes.INTEGER,
+        primaryKey: true,
+        autoIncrement: true
+    },
+    name: {
+        type: DataTypes.STRING
+    },
+    phone: {
+        type: DataTypes.STRING
+    },
+    email: {
+        type: DataTypes.STRING,
+        unique: true
+    },
+}, {
+    sequelize,
+    modelName: 'member',
+    timestamps: false
+});
 
 module.exports = Member;

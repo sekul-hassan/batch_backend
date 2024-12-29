@@ -1,0 +1,185 @@
+const { DataTypes } = require("sequelize");
+const sequelize = require('../DBConfig/Config');
+
+const Batch = sequelize.define('batch', {
+    id: { type: DataTypes.INTEGER, primaryKey: true, autoIncrement: true },
+    name: { type: DataTypes.STRING },
+    email: { type: DataTypes.STRING },
+    password: { type: DataTypes.STRING },
+    profilePic: { type: DataTypes.STRING },
+    coverPic: { type: DataTypes.STRING }
+}, { timestamps: false });
+
+
+module.exports = Batch;
+const { DataTypes } = require("sequelize");
+const sequelize = require('../DBConfig/Config');
+
+const Course = sequelize.define('course', {
+    id: { type: DataTypes.INTEGER, primaryKey: true, autoIncrement: true },
+    title: { type: DataTypes.STRING },
+    code: { type: DataTypes.STRING },
+    teacher: { type: DataTypes.STRING },
+}, { timestamps: false });
+
+module.exports = Course;
+const { DataTypes } = require("sequelize");
+const sequelize = require('../DBConfig/Config');
+
+const CourseDetails = sequelize.define('course_details', {
+    id: { type: DataTypes.INTEGER, primaryKey: true, autoIncrement: true },
+    description: { type: DataTypes.STRING },
+    image: { type: DataTypes.STRING },
+
+}, { timestamps: false });
+
+module.exports = CourseDetails;
+const { DataTypes } = require("sequelize");
+const sequelize = require('../DBConfig/Config');
+
+const CRInfo = sequelize.define('crinfo', {
+    id: { type: DataTypes.INTEGER, primaryKey: true, autoIncrement: true },
+    speech: { type: DataTypes.STRING },
+    pic: { type: DataTypes.STRING }
+}, { timestamps: false });
+
+module.exports = CRInfo;
+const { Model, DataTypes } = require("sequelize");
+const sequelize = require('../DBConfig/Config');
+
+class Member extends Model {}
+
+Member.init({
+    id: {
+        type: DataTypes.INTEGER,
+        primaryKey: true,
+        autoIncrement: true
+    },
+    name: {
+        type: DataTypes.STRING
+    },
+    phone: {
+        type: DataTypes.STRING
+    },
+    email: {
+        type: DataTypes.STRING,
+        unique: true
+    },
+}, {
+    sequelize,
+    modelName: 'member',
+    timestamps: false
+});
+
+module.exports = Member;
+const {Model, DataTypes} = require("sequelize");
+const sequelize = require("../DBConfig/Config");
+
+
+class Notice extends Model {}
+
+Notice.init({
+    id:{type:DataTypes.INTEGER,primaryKey:true,autoIncrement:true},
+    author:{type:DataTypes.STRING},
+    title:{type:DataTypes.STRING},
+    description:{type:DataTypes.STRING},
+},{
+    sequelize,
+    modelName:'notice',
+    timestamps:true,
+})
+
+module.exports = Notice;
+ const { DataTypes } = require("sequelize");
+const sequelize = require('../DBConfig/Config');
+
+const Semester = sequelize.define("semester", {
+    id: { type: DataTypes.INTEGER, primaryKey: true, autoIncrement: true },
+    semester: { type: DataTypes.STRING },
+    mcrName: { type: DataTypes.STRING },
+    fcrName: { type: DataTypes.STRING },
+    mcrPhoto: { type: DataTypes.STRING },
+    fcrPhoto: { type: DataTypes.STRING },
+}, { timestamps: false });
+
+module.exports = Semester;
+const sequelize = require("../DBConfig/Config");
+const Member = require("./Member");
+const {DataTypes} = require("sequelize");
+
+
+class Student extends Member {}
+
+Student.init({
+    id:{type:DataTypes.INTEGER,autoIncrement:true,primaryKey:true},
+    district:{type:DataTypes.STRING},
+    profilePic:{type:DataTypes.STRING},
+},{
+    sequelize,
+    modelName:'student',
+    timestamps:false,
+})
+
+module.exports = Student;
+ 
+const {DataTypes} = require("sequelize") ;
+const sequelize = require("../DBConfig/Config");
+const Member = require("../Model/Member");
+
+
+class Teacher extends Member {}
+
+Teacher.init({
+    id:{type:DataTypes.INTEGER,primaryKey:true,autoIncrement:true},
+    designation:{type:DataTypes.STRING},
+},{
+    sequelize,
+    modelName:'teacher',
+    timestamps:false,
+})
+
+module.exports = Teacher;
+ const Batch = require("../Model/Batch");
+const Semester = require("../Model/Semester");
+const Member = require("../Model/Member");
+const Course = require("../Model/Course");
+const CRInfo = require("../Model/CRInfo");
+const CourseDetails = require("../Model/CouseDetails");
+const Notice = require("../Model/Notice");
+const Teacher = require("../Model/Teacher");
+
+const defineAssociations = () => {
+    // Batch to Member (One-to-Many)
+    Batch.hasMany(Member, { foreignKey: 'batchId', as: 'members' });
+    Member.belongsTo(Batch, { foreignKey: 'batchId', as: 'batch' });
+
+    // Batch to Semester (One-to-Many)
+    Batch.hasMany(Semester, { foreignKey: 'batchId', as: 'semesters' });
+    Semester.belongsTo(Batch, { foreignKey: 'batchId', as: 'batch' });
+
+    // Semester to Course (One-to-Many)
+    Semester.hasMany(Course, { foreignKey: 'semesterId', as: 'courses' });
+    Course.belongsTo(Semester, { foreignKey: 'semesterId', as: 'semester' });
+
+    // Semester to CRInfo (One-to-One)
+    Semester.hasOne(CRInfo, { foreignKey: 'semesterId', as: 'crInfo' });
+    CRInfo.belongsTo(Semester, { foreignKey: 'semesterId', as: 'semester' });
+
+    // Semester to Notice (One-to-Many)
+    Semester.hasMany(Notice, { foreignKey: 'semesterId', as: 'notices' }); // Change 'notice' to 'notices'
+    Notice.belongsTo(Semester, { foreignKey: 'semesterId', as: 'semester' });
+
+    // Course to CourseDetails (One-to-Many)
+    Course.hasMany(CourseDetails, { foreignKey: 'courseId', as: 'course_details' });
+    CourseDetails.belongsTo(Course, { foreignKey: 'courseId', as: 'course' });
+
+    // Course to Teacher (One-to-Many)
+    Course.hasMany(Teacher, { foreignKey: 'courseId', as: 'teachers' }); // Changed 'teacher' to 'teachers'
+    Teacher.belongsTo(Course, { foreignKey: 'courseId', as: 'course' });
+};
+
+module.exports = defineAssociations;
+give me db gram code
+
+
+

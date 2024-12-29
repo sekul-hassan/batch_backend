@@ -68,6 +68,4 @@ const encodeFilePath = (filePath) => {
     return filePath.split('\\').map(encodeURIComponent).join('/');
 }
 
-
-
 module.exports = { addSemester,getSemesters ,encodeFilePath};

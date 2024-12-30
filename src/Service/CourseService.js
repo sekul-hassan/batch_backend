@@ -5,9 +5,11 @@ const Batch = require("../Model/Batch");
 
 const addCourse = async (req,res) =>{
     const {title,code,teacher,semesterId,batchId} = req.body;
-    const semester = await Semester.findByPk(semesterId);
-    const batch = await Batch.findByPk(batchId);
+
     try{
+        const semester = await Semester.findByPk(semesterId);
+        const batch = await Batch.findByPk(batchId);
+
         if(!batch){
             return res.status(404).json({error: "Batch not found."});
         }
@@ -16,7 +18,7 @@ const addCourse = async (req,res) =>{
         }
 
         const existingCourse = await Course.findOne({where: {
-            code: code,
+                code: code,
                 semesterId:semesterId,
                 batchId: batchId,
             }})
@@ -29,6 +31,7 @@ const addCourse = async (req,res) =>{
         });
         return res.status(201).json({message: "Course creation is successful.",course: course});
     }catch (error){
+        console.log(error);
         return res.status(500).json({error: "Internal server error. Please try later."});
     }
 

@@ -1,5 +1,6 @@
 const CourseDetails = require("../Model/CouseDetails");
 const {encodeFilePath} = require("./SemesterService");
+
 const addCourseDetails = async (req, res) => {
     let data;
 
@@ -52,17 +53,22 @@ const getCourseDetails = async (req,res) =>{
         return res.status(400).json({error: "Your data is missing."});
     }
 
-    const courseDetails = await CourseDetails.findAll({where: {
-            batchId:batchId,
-            semesterId:semesterId,
-            courseId: courseId,
-        }});
+    try{
+        const courseDetails = await CourseDetails.findAll({where: {
+                batchId:batchId,
+                semesterId:semesterId,
+                courseId: courseId,
+            }});
 
-    const updatedSemesters = courseDetails.map(details => ({
-        ...details.dataValues,
-        image: `${req.protocol}://${req.get('host')}/static/${encodeFilePath(details.image)}`,
-    }));
-    return res.status(200).json({courseDetails: updatedSemesters});
+        const updatedSemesters = courseDetails.map(details => ({
+            ...details.dataValues,
+            image: `${req.protocol}://${req.get('host')}/static/${encodeFilePath(details.image)}`,
+        }));
+        return res.status(200).json({courseDetails: updatedSemesters});
+    }catch (err){
+        console.log(err);
+        return res.status(500).json({error: "Internal server error. Please try later."});
+    }
 }
 
 module.exports = { addCourseDetails,getCourseDetails };

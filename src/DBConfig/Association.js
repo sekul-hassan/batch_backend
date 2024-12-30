@@ -16,6 +16,14 @@ const defineAssociations = () => {
     Batch.hasMany(Semester, { foreignKey: 'batchId', as: 'semesters' });
     Semester.belongsTo(Batch, { foreignKey: 'batchId', as: 'batch' });
 
+    // Batch to Semester (One-to-Many)
+    Batch.hasMany(Course, { foreignKey: 'batchId', as: 'courses' });
+    Course.belongsTo(Batch, { foreignKey: 'batchId', as: 'batch' });
+
+    // Batch to Semester (One-to-Many)
+    Batch.hasMany(CourseDetails, { foreignKey: 'batchId', as: 'courseDetails' });
+    CourseDetails.belongsTo(Batch, { foreignKey: 'batchId', as: 'batch' });
+
     // Semester to Course (One-to-Many)
     Semester.hasMany(Course, { foreignKey: 'semesterId', as: 'courses' });
     Course.belongsTo(Semester, { foreignKey: 'semesterId', as: 'semester' });
@@ -23,6 +31,10 @@ const defineAssociations = () => {
     // Semester to CRInfo (One-to-One)
     Semester.hasOne(CRInfo, { foreignKey: 'semesterId', as: 'crInfo' });
     CRInfo.belongsTo(Semester, { foreignKey: 'semesterId', as: 'semester' });
+
+    // Semester to CRInfo (One-to-One)
+    Semester.hasOne(CourseDetails, { foreignKey: 'semesterId', as: 'courseDetails' });
+    CourseDetails.belongsTo(Semester, { foreignKey: 'semesterId', as: 'semester' });
 
     // Semester to Notice (One-to-Many)
     Semester.hasMany(Notice, { foreignKey: 'semesterId', as: 'notices' }); // Change 'notice' to 'notices'

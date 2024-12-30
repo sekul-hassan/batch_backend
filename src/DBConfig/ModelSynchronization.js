@@ -4,7 +4,7 @@ const defineAssociations = require('../DBConfig/Association');
 const modelSynchronization = async () => {
     try {
         defineAssociations();
-        await sequelize.sync();
+        await sequelize.sync({alter:true});
         console.log("Database synchronized");
     } catch (err) {
         console.error("Error:", err);

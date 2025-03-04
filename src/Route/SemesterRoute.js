@@ -1,6 +1,6 @@
 const express = require('express');
 const { addSemester, getSemesters} = require('../Service/SemesterService');
-const upload = require("../StorageConfig");
+const upload = require("../Configuration/StorageConfig");
 const semesterRouter = express.Router();
 
 semesterRouter.post('/addSemester',upload.fields([

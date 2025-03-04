@@ -1,9 +1,9 @@
 const multer = require('multer');
 const path = require('path');
 const fs = require('fs');
-const Batch = require("./Model/Batch");
-const Semester = require("./Model/Semester");
-const CourseDetails = require("./Model/CouseDetails");
+const Batch = require("../Model/Batch");
+const Semester = require("../Model/Semester");
+const CourseDetails = require("../Model/CouseDetails");
 
 const storage = multer.diskStorage({
     destination: async (req, file, cb) => {

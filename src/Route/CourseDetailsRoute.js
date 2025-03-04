@@ -1,5 +1,5 @@
 const express = require('express');
-const upload = require('../StorageConfig'); // Ensure the path is correct
+const upload = require('../Configuration/StorageConfig'); // Ensure the path is correct
 const { addCourseDetails, getCourseDetails} = require('../Service/CourseDetails');
 
 const courseDetailsRouter = express.Router();

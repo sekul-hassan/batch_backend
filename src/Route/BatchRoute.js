@@ -1,5 +1,5 @@
 const express = require("express");
-const upload = require("../StorageConfig");
+const upload = require("../Configuration/StorageConfig");
 const {getAllBatch, createBatch, login} = require("../Service/BatchService");
 
 const batchRouter = express.Router();
